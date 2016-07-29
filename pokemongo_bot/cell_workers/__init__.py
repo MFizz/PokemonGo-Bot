@@ -12,3 +12,5 @@ from spin_fort import SpinFort
 from handle_soft_ban import HandleSoftBan
 from follow_path import FollowPath
 from follow_spiral import FollowSpiral
+from follow_point import FollowPoint
+from find_biggest_cluster import FindBiggestCluster

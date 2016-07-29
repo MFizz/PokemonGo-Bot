@@ -249,6 +249,16 @@ def init_config():
     add_config(
         parser,
         load,
+        short_flag="-pr",
+        long_flag="--navigator.radius",
+        help="Maximum distance between the pokestops and their average location",
+        type=int,
+        default=50
+    )
+
+    add_config(
+        parser,
+        load,
         short_flag="-d",
         long_flag="--debug",
         help="Debug Mode",
