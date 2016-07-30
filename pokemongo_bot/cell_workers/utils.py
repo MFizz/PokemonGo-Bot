@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import struct
-from math import asin, cos, sqrt
+from math import asin, atan, cos, exp, log, pi, sqrt, tan
 
 from colorama import init
 
@@ -144,3 +144,38 @@ def print_yellow(message):
 
 def print_red(message):
     print(u'\033[91m' + message.decode('utf-8') + '\033[0m')
+
+# pseudo mercator projection
+EARTH_RADIUS = 6378137
+
+
+def coord2merc(lng, lat):
+    return [lng2x(lng), lat2y(lat)]
+
+
+def merc2coord(vec):
+    return [x2lng(vec[0]), y2lat(vec[0])]
+
+
+def y2lat(y):
+    return rad2deg(2.0 * atan(exp(y / EARTH_RADIUS)) - pi / 2.0)
+
+
+def lat2y(lat):
+    return log(tan(pi / 4.0 + deg2rad(lat) / 2.0)) * EARTH_RADIUS
+
+
+def x2lng(x):
+    return rad2deg(x / EARTH_RADIUS)
+
+
+def lng2x(lng):
+    return deg2rad(lng) * EARTH_RADIUS
+
+
+def deg2rad(deg):
+    return deg * pi / 180.0
+
+
+def rad2deg(rad):
+    return rad * 180.0 / pi
