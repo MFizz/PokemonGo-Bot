@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import struct
-from math import asin, atan, cos, exp, log, pi, sqrt, tan
+from math import asin, atan, cos, exp, log, pi, sin, sqrt, tan
 
 from colorama import init
 
@@ -146,31 +146,50 @@ def print_red(message):
     print(u'\033[91m' + message.decode('utf-8') + '\033[0m')
 
 # pseudo mercator projection
-EARTH_RADIUS = 6378137
+EARTH_RADIUS_MAJ = 6378137.0
+EARTH_RADIUS_MIN = 6356752.3142
+RATIO = (EARTH_RADIUS_MIN / EARTH_RADIUS_MAJ)
+ECCENT = sqrt(1.0 - RATIO**2)
+COM = 0.5 * ECCENT
 
 
-def coord2merc(lng, lat):
-    return [lng2x(lng), lat2y(lat)]
+def coord2merc(lat, lng):
+    return lng2x(lng), lat2y(lat)
 
 
 def merc2coord(vec):
-    return [x2lng(vec[0]), y2lat(vec[0])]
+    return y2lat(vec[1]), x2lng(vec[0])
 
 
 def y2lat(y):
-    return rad2deg(2.0 * atan(exp(y / EARTH_RADIUS)) - pi / 2.0)
+    ts = exp(-y / EARTH_RADIUS_MAJ)
+    phi = pi - 2 * atan(ts)
+    dphi = 1.0
+    for i in range(15):
+        if abs(dphi) > 0.000000001:
+            break
+        con = ECCENT * sin(phi)
+        dphi = pi - 2 * atan (ts * pow((1.0 - con) / (1.0 + con), COM)) - phi
+        phi += dphi
+    return rad2deg(phi)
 
 
 def lat2y(lat):
-    return log(tan(pi / 4.0 + deg2rad(lat) / 2.0)) * EARTH_RADIUS
+    lat = min(89.5, max(lat, -89.5))
+    phi = deg2rad(lat)
+    sinphi = sin(phi)
+    con = ECCENT * sinphi
+    con = pow((1.0 - con) / (1.0 + con), COM)
+    ts = tan(0.5 * (pi * 0.5 - phi)) / con
+    return 0 - EARTH_RADIUS_MAJ * log(ts)
 
 
 def x2lng(x):
-    return rad2deg(x / EARTH_RADIUS)
+    return rad2deg(x) / EARTH_RADIUS_MAJ
 
 
 def lng2x(lng):
-    return deg2rad(lng) * EARTH_RADIUS
+    return EARTH_RADIUS_MAJ * deg2rad(lng);
 
 
 def deg2rad(deg):
