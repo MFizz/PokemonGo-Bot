@@ -11,20 +11,20 @@ class FindBiggestClusterWorker(object):
 
     def work(self):
         forts = self.bot.get_forts()
-        G = nx.Graph()
-        r = 100
-        test = []
+        radius = 100
 
-        for fort in forts:
+
+
+def find_biggest_cluster(radius, points):
+    graph = nx.Graph()
+    for fort in points:
             merc = coord2merc(fort['latitude'], fort['longitude'])
-            test.append(((fort['latitude'], fort['longitude']), merc2coord(merc)))
-            G.add_node(merc)
-            for node in G.nodes():
-                if node != merc and np.linalg.norm(np.array(merc) - np.array(node)) <= r*2:
-                    G.add_edge(merc, node)
+            graph.add_node(merc)
+            for node in graph.nodes():
+                if node != merc and np.linalg.norm(np.array(merc) - np.array(node)) <= radius*2:
+                    graph.add_edge(merc, node)
 
-        max_clique = max(list(find_cliques(G)), key=len)
-        clique_x, clique_y = zip(*max_clique)
-        best_point = np.mean(clique_x, clique_y)
-
-        merc2coord(best_point)
+    max_clique = max(list(find_cliques(graph)), key=len)
+    clique_x, clique_y = zip(*max_clique)
+    best_point = np.mean(clique_x), np.mean(clique_y)
+    return merc2coord(best_point)
