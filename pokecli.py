@@ -249,6 +249,16 @@ def init_config():
     add_config(
         parser,
         load,
+        short_flag="-pr",
+        long_flag="--navigator.radius",
+        help="Maximum distance between the pokestops and their average location",
+        type=int,
+        default=50
+    )
+
+    add_config(
+        parser,
+        load,
         short_flag="-rp",
         long_flag="--release_pokemon",
         help="Allow transfer pokemon to professor based on release configuration. Default is false",

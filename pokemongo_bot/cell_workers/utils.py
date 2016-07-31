@@ -163,13 +163,13 @@ def merc2coord(vec):
 
 def y2lat(y):
     ts = exp(-y / EARTH_RADIUS_MAJ)
-    phi = pi - 2 * atan(ts)
+    phi = pi / 2.0 - 2 * atan(ts)
     dphi = 1.0
     for i in range(15):
-        if abs(dphi) > 0.000000001:
+        if abs(dphi) < 0.000000001:
             break
         con = ECCENT * sin(phi)
-        dphi = pi - 2 * atan (ts * pow((1.0 - con) / (1.0 + con), COM)) - phi
+        dphi = pi / 2.0 - 2 * atan (ts * pow((1.0 - con) / (1.0 + con), COM)) - phi
         phi += dphi
     return rad2deg(phi)
 
