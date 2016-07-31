@@ -259,6 +259,15 @@ def init_config():
     add_config(
         parser,
         load,
+        short_flag="-rp",
+        long_flag="--release_pokemon",
+        help="Allow transfer pokemon to professor based on release configuration. Default is false",
+        type=bool,
+        default=False
+    )
+    add_config(
+        parser,
+        load,
         short_flag="-d",
         long_flag="--debug",
         help="Debug Mode",
@@ -331,6 +340,15 @@ def init_config():
     add_config(
         parser,
         load,
+        short_flag="-bf",
+        long_flag="--softban_fix",
+        help="Fix softban automatically",
+        type=bool,
+        default=False
+    )
+    add_config(
+        parser,
+        load,
         short_flag="-hr",
         long_flag="--health_record",
         help="Send anonymous bot event to GA for bot health record. Set \"health_record\":false if you need disable it.",
@@ -354,6 +372,15 @@ def init_config():
         help="If avoid_circles flag is set, this flag specifies the maximum size of circles (pokestops) avoided",
         type=int,
         default=10,
+    )
+    add_config(
+        parser,
+        load,
+        short_flag="-mts",
+        long_flag="--forts.move_to_spin",
+        help="Moves to forts nearby ",
+        type=bool,
+        default=True
     )
     add_config(
         parser,
@@ -406,16 +433,10 @@ def init_config():
             Read https://github.com/PokemonGoF/PokemonGo-Bot/wiki/Configuration-files#configuring-tasks for more information.
             """.format(flag_name))
 
-    old_flags = ['mode', 'catch_pokemon', 'spin_forts', 'forts_spin', 'hatch_eggs', 'release_pokemon', 'softban_fix']
+    old_flags = ['mode', 'catch_pokemon', 'spin_forts', 'forts_spin', 'hatch_eggs']
     for flag in old_flags:
         if flag in load:
             task_configuration_error(flag)
-            return None
-
-    nested_old_flags = [('forts', 'spin'), ('forts', 'move_to_spin')]
-    for outer, inner in nested_old_flags:
-        if load.get(outer, {}).get(inner, None):
-            task_configuration_error('{}.{}'.format(outer, inner))
             return None
 
     if (config.evolve_captured
