@@ -1,20 +1,24 @@
 from pokemongo_bot.step_walker import StepWalker
-from pokemongo_bot.cell_workers import FindBiggestCluster
+from pokemongo_bot.cell_workers import find_biggest_cluster
 
 
-class PointNavigator(object):
+class FollowPoint(object):
     def __init__(self, bot):
         self.bot = bot
         self.is_at_destination = False
+        self.dest = None
 
-    def take_step(self):
+    def work(self):
+        worker = [x for x in self.bot.workers if type(x) == find_biggest_cluster.FindBiggestCluster][0]
+
+        if worker.dest is not None:
+            self.dest = worker.dest
         print (str(self.bot.position))
-        worker = [x for x in self.bot.workers if type(x) == FindBiggestCluster][0]
-        dest = worker.dest
-        if dest is not None:
-            lat = dest['latitude']
-            lng = dest['longitude']
-            print(str(dest))
+        print(str(self.dest))
+        if self.dest is not None:
+
+            lat = self.dest['latitude']
+            lng = self.dest['longitude']
             print (str(self.bot.position))
 
             if not self.is_at_destination:

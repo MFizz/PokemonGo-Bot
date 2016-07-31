@@ -4,6 +4,7 @@ from networkx.algorithms.clique import find_cliques
 import networkx as nx
 import numpy as np
 
+
 class FindBiggestCluster(object):
     def __init__(self, bot):
         self.bot = bot

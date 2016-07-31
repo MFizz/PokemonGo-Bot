@@ -58,7 +58,7 @@ class PokemonGoBot(object):
         elif self.config.navigator_type == 'path':
             self.navigator = cell_workers.FollowPath
         elif self.config.navigator_type == 'cluster':
-            self.navigator= cell_workers.PointNavigator(self)
+            self.navigator = cell_workers.FollowPoint
 
         random.seed()
 
